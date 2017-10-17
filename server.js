@@ -152,7 +152,7 @@ function getTracks(res, year, show) {
 					array.push({
 						data_src: 'http://archive.org/download' + source.dir.replace(/\/\d+\/items/, '') + '/' + track.uri,
 						duration: track.duration,
-						href: `\#\/${year}-${show}\/` + String(track.title).replace(/\s/g, '_').replace(/\'/, ''),
+						href: `\#\/${year}-${show}\/` + String(track.title).replace(/\s/g, '_').replace(/\'/g, ''),
 						title: track.title,
 						track: track.track
 					})
