@@ -1,11 +1,13 @@
 var express = require('express');
 var path = require('path');
 var MongoClient = require('mongodb').MongoClient;
+var compression = require('compression');
 var app = express();
 var db;
+var mongoURI = process.env.MONGODB_URI || "mongodb://nth-chile:yerbamate1@ds115045.mlab.com:15045/grateful-dead";
 
 // // Connect to database and set var db
-MongoClient.connect("mongodb://nth-chile:yerbamate1@ds115045.mlab.com:15045/grateful-dead", function(err, database) {
+MongoClient.connect(mongoURI, function(err, database) {
 	if (err) console.error(err);
 	else db = database;
 });
@@ -15,6 +17,12 @@ MongoClient.connect("mongodb://nth-chile:yerbamate1@ds115045.mlab.com:15045/grat
 // Set Handlebars view engine
 app.set('view engine', 'hbs');
 app.set('views', path.join(__dirname, 'views'));
+
+// Deters attackers who target Express apps
+app.disable('x-powered-by')
+
+// Compress all routes
+app.use(compression());
 
 // Set static path
 app.use(express.static(path.join(__dirname, 'public')));
