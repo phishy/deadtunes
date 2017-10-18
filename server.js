@@ -37,8 +37,9 @@ app.get('/api/:year([0-9]{4})', function (req, res) {
 });
 app.get('/api/:year([0-9]{4})-:show([0-9]{2}-[0-9]{2})', function (req, res) {
 	let year = req.params.year;
-	let show = req.params.show;
-	getTracks(res, year, show);
+	let month = req.params.show.slice(0, 2);
+	let day = req.params.show.slice(-2);
+	getTracks(res, year, month, day);
 });
 app.get('*', function(req, res) {
 	res.render('index');
@@ -131,11 +132,16 @@ function getMonths(res, year) {
 		}
 	});
 }
-function getTracks(res, year, show) {
+function getTracks(res, year, month, day) {
+	let nextDay = parseFloat(day) + 1;
+	if (nextDay.toString().length == 1) nextDay = '0' + nextDay;
 	db.collection('sources').aggregate([
 		{
 			"$match": {
-				"date": new Date(`<${year}-${show}>`)
+				"date": {
+					"$gte" : new Date(`${year}-${month}-${day}T00:00:00Z`),
+					"$lt" : new Date(`${year}-${month}-${nextDay}T00:00:00Z`)
+				}
 			}
 		}
 	], function(err, result) {
@@ -160,7 +166,7 @@ function getTracks(res, year, show) {
 					array.push({
 						data_src: 'http://archive.org/download' + source.dir.replace(/\/\d+\/items/, '') + '/' + track.uri,
 						duration: track.duration,
-						href: `\#\/${year}-${show}\/` + String(track.title).replace(/\s/g, '_').replace(/\'/g, ''),
+						href: `\#\/${year.toString()}-${month.toString()}-${day.toString()}\/` + String(track.title).replace(/\s/g, '_').replace(/\'/g, ''),
 						title: track.title,
 						track: track.track
 					})
