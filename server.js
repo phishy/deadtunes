@@ -19,7 +19,7 @@ app.set('view engine', 'hbs');
 app.set('views', path.join(__dirname, 'views'));
 
 // Deters attackers who target Express apps
-app.disable('x-powered-by')
+app.disable('x-powered-by');
 
 // Compress all routes
 app.use(compression());
