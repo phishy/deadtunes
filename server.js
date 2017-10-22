@@ -4,7 +4,7 @@ var MongoClient = require('mongodb').MongoClient;
 var compression = require('compression');
 var app = express();
 var db;
-var mongoURI = process.env.MONGODB_URI || "mongodb://nth-chile:yerbamate1@ds115045.mlab.com:15045/grateful-dead";
+var mongoURI = process.env.MONGODB_URI;
 
 // // Connect to database and set var db
 MongoClient.connect(mongoURI, function(err, database) {
